@@ -14,7 +14,7 @@ bot.set_my_commands(commands)
 
 def connection_database():
     connection = psycopg2.connect(
-        database="telegr_bot",
+        database="telegram_bot",
         user="postgres",
         host="localhost",
         password="1234",
@@ -188,6 +188,8 @@ def add_time_to_go(user_id):
                 UPDATE arrivals SET time_to_go = %s
                 WHERE user_id = %s AND date = %s
             """, (time_to_go, str(user_id), time_to_go.date()))
+            
+            
             conn.commit()
             bot.send_message(user_id, f'Вақти рафтани шумо сабт шуд: {time_to_go}')
         except Exception as e:
@@ -342,12 +344,12 @@ def send_reason_to_teachers(user_id, reason):
         user_info = cur.fetchone()
         if user_info:
             first_name, last_name = user_info
-            message_to_teachers = f"Хонанда {first_name} {last_name} (ID: {user_id}) сабаби ғоиб буданашро фиристод:\n\n{reason}"
+            message_to_teachers = f"Донишҷӯ {first_name} {last_name} (ID: {user_id}) сабаби наомаданашро фиристод:\n\n{reason}"
             requests.get(f"https://api.telegram.org/bot{TEACHER_BOT_TOKEN}/sendMessage?chat_id={TEACHER_CHAT_ID}&text={message_to_teachers}")
         else:
             print(f"User information not found for user_id: {user_id}")
     except Exception as e:
-        print(f"Error sending reason to teachers: {str(e)}")
+        print(f"Error: {str(e)}")
     finally:
         close_connection(conn, cur)
 
